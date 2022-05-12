@@ -25,6 +25,7 @@ logging.basicConfig(
 )
 logger.addHandler(handler)
 
+@app.head('/api/hello')
 @app.get("/api/hello")
 def hello_world():
     logger.debug('inside of hello_world()')
@@ -64,5 +65,13 @@ def exception_example():
     except Exception as ex:
         # never happens
         pass
+
+
+@app.get('/api/health')
+def health():
+    return {
+        'status': 'healthy'
+    }
+
 
 
