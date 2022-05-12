@@ -7,6 +7,14 @@ services:
       - 8080:80
     volumes:
       - ./app:/app
-    user: "${UID}:${GID}"
+    user: "${UID:-1000}:${GID:-1000}"
     command: uvicorn main:app --host 0.0.0.0 --port 80 --reload
+
+
+  toolbox:
+    image: bletvaska/toolbox
+    user: "${UID:-1000}:${GID:-1000}"
+    volumes:
+      - ./app:/app
+    working_dir: /app
 

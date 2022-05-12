@@ -7,7 +7,7 @@ app = FastAPI()
 username = 'john'
 password = 'hello.world'
 
-logger = logging.getLogger('dummy')
+logger = logging.getLogger(__name__)  # 'dummy')
 logging.basicConfig(
     level=logging.INFO,
     format='%(asctime)s %(levelname)s [%(name)s]: %(message)s'
