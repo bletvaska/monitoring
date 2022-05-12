@@ -1,17 +1,29 @@
 import logging
 
 from fastapi import FastAPI
+import logging_loki
 
 app = FastAPI()
 
 username = 'john'
 password = 'hello.world'
 
+handler = logging_loki.LokiHandler(
+        url="http://loki:3100/loki/api/v1/push",
+    tags={
+            "application": "dummy-service",
+            "author": "mirek"
+        },
+    # auth=("username", "password"),
+    version="1",
+)
+
 logger = logging.getLogger(__name__)  # 'dummy')
 logging.basicConfig(
     level=logging.INFO,
     format='%(asctime)s %(levelname)s [%(name)s]: %(message)s'
 )
+logger.addHandler(handler)
 
 @app.get("/api/hello")
 def hello_world():
