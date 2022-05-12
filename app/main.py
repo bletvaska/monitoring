@@ -1,6 +1,7 @@
 import logging
 
 from fastapi import FastAPI
+from fastapi.responses import JSONResponse
 import logging_loki
 
 app = FastAPI()
@@ -67,11 +68,29 @@ def exception_example():
         pass
 
 
+def check_db_status():
+    return True
+
+def check_storage_status():
+    return True
+
 @app.get('/api/health')
 def health():
-    return {
-        'status': 'healthy'
+    is_healthy = check_db_status() and check_storage_status()
+    status_code = 200
+    if is_healthy is False:
+        status_code = 500
+
+    payload = {
+        'healthy': is_healthy,
+        'db': check_db_status(),
+        'storage': check_storage_status()
     }
+
+    return JSONResponse(
+            status_code = status_code,
+            content=payload
+            )
 
 
 
