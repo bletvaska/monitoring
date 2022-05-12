@@ -10,6 +10,18 @@ services:
     user: "${UID:-1000}:${GID:-1000}"
     command: uvicorn main:app --host 0.0.0.0 --port 80 --reload
 
+  loki:
+    image: grafana/loki
+    ports:
+      - 3100:3100
+
+  grafana:
+    image: grafana/grafana
+    ports:
+      - 3000:3000
+    volumes:
+      - ./grafana:/var/lib/grafana
+
 
   toolbox:
     image: bletvaska/toolbox
