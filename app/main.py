@@ -1,6 +1,7 @@
 import logging
+import time
 
-from fastapi import FastAPI
+from fastapi import FastAPI, Request
 from fastapi.responses import JSONResponse
 import logging_loki
 
@@ -25,6 +26,28 @@ logging.basicConfig(
     format='%(asctime)s %(levelname)s [%(name)s]: %(message)s'
 )
 logger.addHandler(handler)
+
+
+@app.middleware('http')
+async def add_process_time_header(request: Request, call_next):
+    start_time = time.time()
+    response = await call_next(request)
+    process_time = time.time() - start_time
+
+    response.headers['X-Process-Time'] = str(process_time)
+
+    return response
+
+
+@app.get('/api/slow')
+def slow_response():
+    print('sleeping for 3 seconds...')
+    time.sleep(3)
+    print('waking up...')
+
+    return "waking up"
+
+
 
 @app.head('/api/hello')
 @app.get("/api/hello")
@@ -74,7 +97,7 @@ def check_db_status():
 def check_storage_status():
     return True
 
-@app.get('/api/health')
+@app.get('/health')
 def health():
     is_healthy = check_db_status() and check_storage_status()
     status_code = 200
