@@ -22,6 +22,16 @@ services:
     volumes:
       - ./grafana:/var/lib/grafana
 
+  prometheus:
+    image: bitnami/prometheus
+    ports:
+      - 9090:9090
+    volumes:
+      - ./prometheus/data:/opt/bitnami/prometheus/data
+      - ./prometheus/conf/prometheus.yml:/opt/bitnami/prometheus/conf/prometheus.yml
+      - ./prometheus/conf:/opt/bitnami/prometheus/conf
+
+
 
   toolbox:
     image: bletvaska/toolbox
