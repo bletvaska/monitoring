@@ -4,8 +4,11 @@ import time
 from fastapi import FastAPI, Request
 from fastapi.responses import JSONResponse
 import logging_loki
+from starlette_prometheus import metrics, PrometheusMiddleware
 
 app = FastAPI()
+app.add_middleware(PrometheusMiddleware)
+app.add_route("/metrics", metrics)
 
 username = 'john'
 password = 'hello.world'
