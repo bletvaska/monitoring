@@ -48,3 +48,32 @@ def get_time(request: Request):
         'unixtime': int(time())
     }
 
+
+
+@app.get('/api/exception')
+def exception_example():
+    try:
+        print('>> start')
+
+        file = open('/root/doesnt.exist', 'r')
+
+        10 / 0
+
+        print('>> end')
+
+    except ZeroDivisionError as ex:
+        logger.error('>> it is not possible to divide by zero')
+        logger.exception(ex)
+
+    except FileNotFoundError as ex:
+        logger.error('Error: File was not found')
+        logger.exception(ex)
+
+    except PermissionError as ex:
+        logger.error('Error: You dont have permissions to access this file')
+        logger.exception(ex)
+
+    except Exception as ex:
+        # never happens
+        pass
+
