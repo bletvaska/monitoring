@@ -19,3 +19,10 @@ services:
         - ./app:/app
         working_dir: /app
 
+
+    loki:
+        image: grafana/loki
+        ports:
+        - 3100:3100
+
+

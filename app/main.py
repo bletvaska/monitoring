@@ -6,7 +6,7 @@ from fastapi import FastAPI, Request
 
 
 logger = logging.getLogger('uservice')
-logging.basicConfig(level=logging.DEBUG, format='%(name)s - %(levelname)s - %(message)s')
+logging.basicConfig(level=logging.INFO, format='%(name)s - %(levelname)s - %(message)s')
 
 # print("something important just occured")
 # logger.debug('debug message')
