@@ -1,16 +1,18 @@
 from time import time
 from datetime import datetime
 
-from fastapi import FastAPI
+from fastapi import FastAPI, Request
 
 app = FastAPI()
 
 
 @app.get("/")
-def get_time():
+def get_time(request: Request):
     now = datetime.now()
 
     return {
+        'client_ip': request.client.host,
+        'day_of_week': now.weekday(),
         'day': now.day,
         'month': now.month,
         'year': now.year,
