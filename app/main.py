@@ -5,20 +5,25 @@ import logging
 from fastapi import FastAPI, Request
 
 
-logging.basicConfig(level=logging.DEBUG)
-print("something important just occured")
-logging.debug('debug message')
-logging.info('info message')
-logging.warning('warning message')
-logging.error('error message')
-logging.critical('critical message')
+logger = logging.getLogger('uservice')
+logging.basicConfig(level=logging.DEBUG, format='%(name)s - %(levelname)s - %(message)s')
+
+# print("something important just occured")
+# logger.debug('debug message')
+# logger.info('info message')
+# logger.warning('warning message')
+# logger.error('error message')
+# logger.critical('critical message')
 
 
+logger.info('Starting FastAPI application.')
 app = FastAPI()
+logger.info('Waiting for connections.')
 
 
 @app.get("/")
 def get_time(request: Request):
+    logger.info(f'Connection from {request.client.host}.')
     now = datetime.now()
 
     return {
