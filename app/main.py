@@ -1,7 +1,18 @@
 from time import time
 from datetime import datetime
+import logging
 
 from fastapi import FastAPI, Request
+
+
+logging.basicConfig(level=logging.DEBUG)
+print("something important just occured")
+logging.debug('debug message')
+logging.info('info message')
+logging.warning('warning message')
+logging.error('error message')
+logging.critical('critical message')
+
 
 app = FastAPI()
 
