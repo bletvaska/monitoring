@@ -10,6 +10,10 @@ services:
         - ./app:/app
         user: "${UID:-1000}:${GID:-1000}"
         command: uvicorn main:app --host 0.0.0.0 --port 8080 --reload
+#         logging:
+#             driver: fluentd
+#             options:
+#                 fluentd-address: fluentd:24224
 
 
     toolbox:
@@ -32,6 +36,18 @@ services:
         ports:
         - 3000:3000
         volumes:
-        - ./grafana:/var/lib/grafana
+        - ./config/grafana:/var/lib/grafana
 
-
+#     fluentd:
+#         # image: fluent/fluentd
+#         image: grafana/fluent-plugin-loki:master
+#         volumes:
+#         - ./config/fluentd/conf:/fluentd/etc
+#         ports:
+#         - 24224:24224
+#         - 24224:24224/udp
+#         environment:
+#             LOKI_URL: http://loki:3100
+#             LOKI_USERNAME:
+#             LOKI_PASSWORD:
+# 

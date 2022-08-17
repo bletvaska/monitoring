@@ -3,7 +3,10 @@ from datetime import datetime
 import logging
 
 from fastapi import FastAPI, Request
+from fastapi.responses import JSONResponse
 import logging_loki
+from pytz import timezone
+from pytz.exceptions import UnknownTimeZoneError
 
 
 # configuration of logging
@@ -30,24 +33,33 @@ app = FastAPI()
 logger.info('Waiting for connections.')
 
 
-@app.get("/")
-def get_time(request: Request):
+@app.get("/api/timezone/{area}/{location}")
+def get_time(request: Request, area, location):
     logger.info(f'Connection from {request.client.host}.')
-    now = datetime.now()
 
-    return {
-        'client_ip': request.client.host,
-        'day_of_week': now.weekday(),
-        'day': now.day,
-        'month': now.month,
-        'year': now.year,
-        'hour': now.hour,
-        'minute': now.minute,
-        'second': now.second,
-        'isoformat': now.isoformat(),
-        'unixtime': int(time())
-    }
+    try:
+        tz = timezone(f'{area}/{location}')
+        now = datetime.now(tz)
 
+        return {
+            'client_ip': request.client.host,
+            'day_of_week': now.weekday(),
+            'day': now.day,
+            'month': now.month,
+            'year': now.year,
+            'hour': now.hour,
+            'minute': now.minute,
+            'second': now.second,
+            'datetime': now.isoformat(),
+            'unixtime': int(time()),
+            'timezone': tz.zone
+        }
+
+    except UnknownTimeZoneError as ex:
+        logger.error(f'Unknown timezone "{area}/{location}"')
+        return JSONResponse(status_code=404, content={
+            'message': f'Unknown timezone "{area}/{location}".'
+        })
 
 
 @app.get('/api/exception')
@@ -76,4 +88,12 @@ def exception_example():
     except Exception as ex:
         # never happens
         pass
+
+
+@app.get('/api/healthz')
+def check_health():
+    return {
+        'status': 'up'
+    }
+
 
