@@ -7,7 +7,7 @@ import logging_loki
 
 
 # configuration of logging
-# logging_loki.emitter.LokiEmitter.level_tag = 'level'
+logging_loki.emitter.LokiEmitter.level_tag = 'level'
 
 handler = logging_loki.LokiHandler(
     url='http://loki:3100/loki/api/v1/push',
