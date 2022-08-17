@@ -26,3 +26,11 @@ services:
         - 3100:3100
 
 
+    grafana:
+        image: grafana/grafana
+        ports:
+        - 3000:3000
+        volumes:
+        - ./grafana:/var/lib/grafana
+
+
