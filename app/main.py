@@ -3,9 +3,18 @@ from datetime import datetime
 import logging
 
 from fastapi import FastAPI, Request
+import logging_loki
 
 
+# configuration of logging
+# logging_loki.emitter.LokiEmitter.level_tag = 'level'
+
+handler = logging_loki.LokiHandler(
+    url='http://loki:3100/loki/api/v1/push',
+    version='1'
+)
 logger = logging.getLogger('uservice')
+logger.addHandler(handler)
 logging.basicConfig(level=logging.INFO, format='%(name)s - %(levelname)s - %(message)s')
 
 # print("something important just occured")
