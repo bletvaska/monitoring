@@ -47,6 +47,18 @@ services:
         volumes:
         - ./config/grafana:/var/lib/grafana
 
+
+    prometheus:
+        image: bitnami/prometheus
+#        image: prom/prometheus
+        ports:
+        - 9090:9090
+        volumes:
+        - ./config/prometheus/data:/opt/bitnami/prometheus/data
+        - ./config/prometheus/conf/prometheus.yml:/opt/bitnami/prometheus/conf/prometheus.yml
+
+
+
 #     fluentd:
 #         # image: fluent/fluentd
 #         image: grafana/fluent-plugin-loki:master
