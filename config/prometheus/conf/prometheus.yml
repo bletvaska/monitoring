@@ -3,6 +3,10 @@ global:
     evaluation_interval: 15s
 
 scrape_configs:
+    - job_name: worldtime
+      static_configs:
+      - targets: ['worldtime:8080']
+
     - job_name: prometheus
       static_configs:
       - targets: ['prometheus:9090']

@@ -7,6 +7,7 @@ from fastapi.responses import JSONResponse
 import logging_loki
 from pytz import timezone, all_timezones
 from pytz.exceptions import UnknownTimeZoneError
+from starlette_prometheus import metrics, PrometheusMiddleware
 
 
 # configuration of logging
@@ -30,6 +31,8 @@ logging.basicConfig(level=logging.INFO, format='%(name)s - %(levelname)s - %(mes
 
 logger.info('Starting FastAPI application.')
 app = FastAPI()
+app.add_middleware(PrometheusMiddleware)
+app.add_route('/metrics', metrics)
 logger.info('Waiting for connections.')
 
 

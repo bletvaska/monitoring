@@ -2,4 +2,5 @@ uvicorn
 fastapi
 python-logging-loki
 pytz
+starlette-prometheus
 
