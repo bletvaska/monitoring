@@ -75,7 +75,11 @@ def get_timezone(request: Request, area, location):
     except UnknownTimeZoneError as ex:
         logger.error(f'Unknown timezone "{area}/{location}"')
         return JSONResponse(status_code=404, content={
-            'message': f'Unknown timezone "{area}/{location}".'
+            'type': '/errors/timezone/unknown-timezone',
+            'title': 'Unknown timezone',
+            'status': 404,
+            'detail': f"The provided timezone '{area}/{location}' doesn't exist. That means, you either made a typo or such location really doesn't exist.",
+            'instance': '/api/timezone'
         })
 
 
