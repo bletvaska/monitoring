@@ -55,6 +55,7 @@ services:
         - 9090:9090
         user: "${UID:-1000}:${GID:-1000}"
         volumes:
+#        - ./config/prometheus:/opt/bitnami/promethues
         - ./config/prometheus/data:/opt/bitnami/prometheus/data
         - ./config/prometheus/conf/prometheus.yml:/opt/bitnami/prometheus/conf/prometheus.yml
 
