@@ -60,6 +60,16 @@ services:
         - ./config/prometheus/conf/prometheus.yml:/opt/bitnami/prometheus/conf/prometheus.yml
 
 
+    node_exporter:
+        image: quay.io/prometheus/node-exporter:latest
+        command:
+          - '--path.rootfs=/host'
+        network_mode: host
+        pid: host
+        restart: unless-stopped
+        volumes:
+          - '/:/host:ro,rslave'
+
 
 #     fluentd:
 #         # image: fluent/fluentd
@@ -74,3 +84,4 @@ services:
 #             LOKI_USERNAME:
 #             LOKI_PASSWORD:
 # 
+
