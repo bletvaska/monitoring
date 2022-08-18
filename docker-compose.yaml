@@ -64,7 +64,7 @@ services:
         image: quay.io/prometheus/node-exporter:latest
         command:
           - '--path.rootfs=/host'
-        network_mode: host
+        # network_mode: host
         pid: host
         restart: unless-stopped
         volumes:
