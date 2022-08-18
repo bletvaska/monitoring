@@ -1,3 +1,6 @@
+# to build Docker image you have to execute following command:
+# docker image build -t worldtime .
+
 FROM bletvaska/python
 
 WORKDIR /app
