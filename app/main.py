@@ -1,4 +1,4 @@
-from time import time
+from time import time, sleep
 from datetime import datetime
 import logging
 
@@ -97,8 +97,15 @@ def exception_example():
 
 @app.get('/api/healthz')
 def check_health():
-    return {
+    # for unhealthy status
+    # sleep(30)
+
+    content = {
         'status': 'up'
     }
 
+    return JSONResponse(
+        status_code=200, 
+        content=content
+    )
 
