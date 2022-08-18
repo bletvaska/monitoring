@@ -5,7 +5,7 @@ import logging
 from fastapi import FastAPI, Request
 from fastapi.responses import JSONResponse
 import logging_loki
-from pytz import timezone
+from pytz import timezone, all_timezones
 from pytz.exceptions import UnknownTimeZoneError
 
 
@@ -33,8 +33,13 @@ app = FastAPI()
 logger.info('Waiting for connections.')
 
 
+@app.get('/api/timezone')
+def get_list_of_timezones():
+    return all_timezones
+
+
 @app.get("/api/timezone/{area}/{location}")
-def get_time(request: Request, area, location):
+def get_timezone(request: Request, area, location):
     logger.info(f'Connection from {request.client.host}.')
 
     try:
