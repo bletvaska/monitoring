@@ -33,6 +33,15 @@ app = FastAPI()
 logger.info('Waiting for connections.')
 
 
+@app.middleware('http')
+async def add_process_time_header(request: Request, call_next):
+    start = time()
+    response = await call_next(request)
+    process_time = time() - start
+    response.headers['X-Process-Time'] = str(process_time)
+    return response
+
+
 @app.get('/api/timezone')
 def get_list_of_timezones():
     return all_timezones
@@ -98,7 +107,7 @@ def exception_example():
 @app.get('/api/healthz')
 def check_health():
     # for unhealthy status
-    # sleep(30)
+    sleep(5)
 
     content = {
         'status': 'up'
