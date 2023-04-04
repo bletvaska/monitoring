@@ -1,5 +1,6 @@
 import sys
 from functools import wraps
+from time import sleep
 
 from fastapi import FastAPI, Request
 from fastapi.responses import JSONResponse
@@ -82,6 +83,14 @@ def get_timezone_info(request: Request, area, location):
                 'error': f'Unknown timezone {area}/{location}.'
             }
         )
+        
+
+@app.get('/api/deadlock')
+def endless_loop():
+    logger.info('>> in deadlock   ') 
+    while True:
+        logger.info('work in progress...')
+        sleep(1)
 
 
 def main():
