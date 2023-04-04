@@ -18,3 +18,7 @@ scrape_configs:
     static_configs:
     - targets: ['worldtime:8000']
 
+  - job_name: node_exporter
+    static_configs:
+    - targets: ['node_exporter:9100']
+

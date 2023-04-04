@@ -1,10 +1,8 @@
 from functools import wraps
-from time import sleep
 import time
 
 from fastapi import FastAPI, Request
 from fastapi.responses import JSONResponse
-import uvicorn
 import pendulum
 import logging
 import logging_loki
@@ -47,7 +45,14 @@ def log_client_ip(func):
     @wraps(func)
     def wrapper(*args, **kwargs):
         request = kwargs["request"]
-        logger.info(f"Incomming connection from {request.client.host}")
+        logger.info(f"Incomming connection from {request.client.host}",
+                    extra={
+                        'tags': {
+                            'client': request.client.host,
+                            'port': request.client.port,
+                            'path': request.url.path
+                        }
+                })
         return func(*args, **kwargs)
 
     return wrapper
@@ -93,12 +98,12 @@ def get_timezone_info(request: Request, area, location):
         )
         
 
-@app.get('/api/deadlock')
-def endless_loop():
-    logger.info('>> in deadlock   ') 
+@app.get('/deadlock')
+def deadlock():
     while True:
-        logger.info('work in progress...')
-        # sleep(1)
+        logger.info('>> work in progress...')
+        time.sleep(1)
+        
 
 
 @app.get('/api/healthz')
@@ -111,12 +116,3 @@ def healthcheck():
         'filesystem': 'ok',
         'database': 'ok'
         }
-
-
-def main():
-    uvicorn.run('main:app', host='0.0.0.0', reload=True, port=8000)
-    
-
-if __name__ == '__main__':
-    main()
-    

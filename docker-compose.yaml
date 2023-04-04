@@ -7,18 +7,24 @@ services:
     - ./app:/app
     ports:
     - 80:8000
-    command: python3 main.py
-    # - uvicorn "main:app"
-    # - --host 0.0.0.0
-    # - --port 8000
-    # - --reload
-    # - --log-level critical
+    command: [
+      "uvicorn", "main:app", "--reload",
+      "--host=0.0.0.0", "--port=8000", "--log-level=critical"
+    ]
     healthcheck:
       test: ["CMD", "http", "--check-status", "get", "http://localhost:8000/api/healthz"]
       interval: 10s
       timeout: 3s
       retries: 3
       start_period: 15s
+    deploy:
+      resources:
+        limits:
+          cpus: "1"
+          memory: 100M
+        reservations:
+          cpus: "0.25"
+          memory: 50M
 
   loki:
     image: grafana/loki
@@ -38,7 +44,16 @@ services:
     - 9090:9090
     volumes:
     - prometheus:/opt/bitnami/prometheus/data
-    - ./config/prometheus/prometheus.yml:/opt/bitnami/prometheus/conf/prometheus.yml
+    - ./config/prometheus/:/opt/bitnami/prometheus/conf/
+
+  node_exporter:
+    image: quay.io/prometheus/node-exporter:latest
+    command:
+      - '--path.rootfs=/host'
+    volumes:
+      - '/:/host:ro,rslave'
+    ports:
+    - 9100:9100
 
 
 volumes:
