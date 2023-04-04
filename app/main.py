@@ -8,7 +8,7 @@ import uvicorn
 import pendulum
 import logging
 import logging_loki
-
+from starlette_prometheus import metrics, PrometheusMiddleware
 
 logging.basicConfig(
     level=logging.INFO,
@@ -27,9 +27,10 @@ handler = logging_loki.LokiHandler(
 # add handler to logger
 logger.addHandler(handler)
 
-logger.info('Starting WorldTime Aplication...')
+# app initialization
 app = FastAPI()
-logger.info('Waiting for connections... ')
+app.add_middleware(PrometheusMiddleware)
+app.add_route('/metrics', metrics)
 
 
 @app.middleware('http')

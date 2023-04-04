@@ -4,3 +4,4 @@ pendulum
 python-logging-loki
 httpie
 ipython
+starlette-prometheus
