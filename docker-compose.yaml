@@ -8,6 +8,11 @@ services:
     - 80:8000
     image: bletvaska/python
     command: python3 main.py
+    # - uvicorn "main:app"
+    # - --host 0.0.0.0
+    # - --port 8000
+    # - --reload
+    # - --log-level critical
 
   loki:
     image: grafana/loki

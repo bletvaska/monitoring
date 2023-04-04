@@ -1,4 +1,5 @@
 import sys
+from functools import wraps
 
 from fastapi import FastAPI, Request
 from fastapi.responses import JSONResponse
@@ -28,28 +29,31 @@ logger.info('Starting WorldTime Aplication...')
 app = FastAPI()
 logger.info('Waiting for connections... ')
 
-
+def log_client_ip(func):
+    @wraps(func)
+    async def wrapper(*args, **kwargs):
+        request = kwargs['request']
+        logger.info(f'Connection from {request.client.host}',
+            extra={
+                'tags': {
+                    'client': request.client.host,
+                    'port': request.client.port
+                }
+            })
+        return await func(*args, **kwargs)
+        
+    return wrapper
+    
+    
+@log_client_ip
 @app.get('/api/timezones')
-def get_timezones(request: Request):
-    logger.info(f'Connection from {request.client.host}',
-                extra={
-                    'tags': {
-                        'client': request.client.host,
-                        'port': request.client.port
-                    }
-                })
+async def get_timezones(request: Request):
     return pendulum.timezones
 
 
+@log_client_ip
 @app.get('/api/timezones/{area}/{location}')
 def get_timezone_info(request: Request, area, location):
-    logger.info(f'Connection from {request.client.host}',
-                extra={
-                    'tags': {
-                        'client': request.client.host,
-                        'port': request.client.port
-                    }
-                })
     try:
         now = pendulum.now(f'{area}/{location}')   # raised exception
         return {
