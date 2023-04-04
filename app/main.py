@@ -53,6 +53,7 @@ async def get_timezones(request: Request):
 
 
 @log_client_ip
+@app.head('/api/timezones/{area}/{location}')
 @app.get('/api/timezones/{area}/{location}')
 def get_timezone_info(request: Request, area, location):
     try:
@@ -90,7 +91,17 @@ def endless_loop():
     logger.info('>> in deadlock   ') 
     while True:
         logger.info('work in progress...')
-        sleep(1)
+        # sleep(1)
+
+
+@app.get('/api/healthz')
+@app.head('/api/healthz')
+def healthcheck():
+    return {
+        'status': 'up',
+        'filesystem': 'ok',
+        'database': 'ok'
+        }
 
 
 def main():

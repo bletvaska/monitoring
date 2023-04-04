@@ -2,3 +2,4 @@ uvicorn
 fastapi
 pendulum
 python-logging-loki
+httpie
