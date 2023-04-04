@@ -32,6 +32,16 @@ services:
     volumes:
     - grafana:/var/lib/grafana
 
+  prometheus:
+    image: bitnami/prometheus
+    ports:
+    - 9090:9090
+    volumes:
+    - prometheus:/opt/bitnami/prometheus/data
+    - config/prometheus/prometheus.yml:/opt/bitnami/prometheus/conf/prometheus.yml
+
+
 volumes:
   loki:
   grafana:
+  prometheus:
