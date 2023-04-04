@@ -1,4 +1,3 @@
-import sys
 from functools import wraps
 from time import sleep
 
@@ -8,6 +7,7 @@ import uvicorn
 import pendulum
 import logging
 import logging_loki
+
 
 logging.basicConfig(
     level=logging.INFO,
@@ -30,31 +30,26 @@ logger.info('Starting WorldTime Aplication...')
 app = FastAPI()
 logger.info('Waiting for connections... ')
 
+
 def log_client_ip(func):
     @wraps(func)
-    async def wrapper(*args, **kwargs):
-        request = kwargs['request']
-        logger.info(f'Connection from {request.client.host}',
-            extra={
-                'tags': {
-                    'client': request.client.host,
-                    'port': request.client.port
-                }
-            })
-        return await func(*args, **kwargs)
-        
+    def wrapper(*args, **kwargs):
+        request = kwargs["request"]
+        logger.info(f"Incomming connection from {request.client.host}")
+        return func(*args, **kwargs)
+
     return wrapper
     
     
-@log_client_ip
 @app.get('/api/timezones')
-async def get_timezones(request: Request):
+@log_client_ip
+def get_timezones(request: Request):
     return pendulum.timezones
 
 
-@log_client_ip
 @app.head('/api/timezones/{area}/{location}')
 @app.get('/api/timezones/{area}/{location}')
+@log_client_ip
 def get_timezone_info(request: Request, area, location):
     try:
         now = pendulum.now(f'{area}/{location}')   # raised exception
@@ -97,6 +92,8 @@ def endless_loop():
 @app.get('/api/healthz')
 @app.head('/api/healthz')
 def healthcheck():
+    # sleep(30)
+    
     return {
         'status': 'up',
         'filesystem': 'ok',
