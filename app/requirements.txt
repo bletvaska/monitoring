@@ -3,3 +3,4 @@ fastapi
 pendulum
 python-logging-loki
 httpie
+ipython

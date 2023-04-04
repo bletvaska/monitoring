@@ -1,5 +1,6 @@
 from functools import wraps
 from time import sleep
+import time
 
 from fastapi import FastAPI, Request
 from fastapi.responses import JSONResponse
@@ -29,6 +30,16 @@ logger.addHandler(handler)
 logger.info('Starting WorldTime Aplication...')
 app = FastAPI()
 logger.info('Waiting for connections... ')
+
+
+@app.middleware('http')
+async def add_process_time_header(request: Request, call_next):
+    start_time = time.time()
+    response = await call_next(request)
+    process_time = time.time() - start_time
+    response.headers['X-Process-Time'] = str(process_time)
+    response.headers['X-Lecturer-Name'] = 'mirek'
+    return response
 
 
 def log_client_ip(func):
