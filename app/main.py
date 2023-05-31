@@ -27,7 +27,6 @@ app = FastAPI()
 logger.info('Waiting for connections.')
 
 
-
 def log_client_ip(func):
     @wraps(func)
     async def wrapper(*args, **kwargs):
@@ -41,15 +40,16 @@ def log_client_ip(func):
     return wrapper
     
     
-
 @app.get('/')
 def hello():
     return 'hello world!'
+
 
 @log_client_ip
 @app.get('/api/timezones')
 def get_timezones(request: Request):
     return pendulum.timezones 
+
 
 @log_client_ip
 @app.get('/api/timezones/{area}/{location}')
