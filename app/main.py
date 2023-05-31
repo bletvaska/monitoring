@@ -1,7 +1,7 @@
 import logging
 
 import pendulum
-from fastapi import FastAPI
+from fastapi import FastAPI, Request
 import logging_loki
 
 # rename level tag to level
@@ -35,15 +35,17 @@ logger.info('Waiting for connections.')
 #                     'training': 'monitoring'
 #                     }})
 
-
 @app.get('/')
 def hello():
     return 'hello world!'
 
 @app.get('/api/timezones')
-def get_timezones():
-    logger.info('get_timezones()')
-    return pendulum.timezones
+def get_timezones(request: Request):
+    logger.info(f'get_timezones() from {request.client.host}',
+                extra={'tags': {
+                    'client': request.client.host
+                }})
+    return pendulum.timezones 
 
 @app.get('/api/timezones/{area}/{location}')
 def get_timezone_info(area, location):
