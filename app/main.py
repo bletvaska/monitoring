@@ -1,4 +1,5 @@
 import logging
+from functools import wraps
 
 import pendulum
 from fastapi import FastAPI, Request
@@ -25,30 +26,34 @@ logger.info('Starting WorldTime Application.')
 app = FastAPI()
 logger.info('Waiting for connections.')
 
-# logger.warning('this is warning')
-# logger.error('this is error')
-# logger.critical('this is critical',
-#                 extra={"tags": {
-#                     "service": "worldtime",
-#                     'customer': 'tsystems',
-#                     'location': 'kosice',
-#                     'training': 'monitoring'
-#                     }})
+
+
+def log_client_ip(func):
+    @wraps(func)
+    async def wrapper(*args, **kwargs):
+        request = kwargs['request']
+        logger.info(f'Connection from {request.client.host}',
+                    extra={'tags': {
+                        'client': request.client.host,
+                        'action': 'audit'
+                    }})
+        return await func(*args, **kwargs)
+    return wrapper
+    
+    
 
 @app.get('/')
 def hello():
     return 'hello world!'
 
+@log_client_ip
 @app.get('/api/timezones')
 def get_timezones(request: Request):
-    logger.info(f'get_timezones() from {request.client.host}',
-                extra={'tags': {
-                    'client': request.client.host
-                }})
     return pendulum.timezones 
 
+@log_client_ip
 @app.get('/api/timezones/{area}/{location}')
-def get_timezone_info(area, location):
+def get_timezone_info(request: Request, area, location):
     now = pendulum.now(f'{area}/{location}')
     return {
         'datetime': now.isoformat(),
