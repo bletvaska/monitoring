@@ -1,7 +1,20 @@
+import logging
+
 import pendulum
 from fastapi import FastAPI
 
+logging.basicConfig(level=logging.INFO)
+
+logging.info('Starting WorldTime Application.')
 app = FastAPI()
+logging.info('Waiting for connections.')
+
+logging.warning('This is warning.')
+logging.error('This is error.')
+logging.critical('This is critical.')
+
+
+
 
 @app.get('/')
 def hello():
