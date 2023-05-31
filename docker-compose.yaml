@@ -13,3 +13,11 @@ services:
      "--reload",
      "--log-level=critical"
     ]
+
+  loki:
+    image: grafana/loki
+    volumes:
+    - loki:/loki
+
+volumes:
+  loki:
