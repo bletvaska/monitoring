@@ -4,6 +4,9 @@ import pendulum
 from fastapi import FastAPI
 import logging_loki
 
+# rename level tag to level
+logging_loki.emitter.LokiEmitter.level_tag = 'level'
+
 # create loki handler
 handler = logging_loki.LokiHandler(
     url="http://loki:3100/loki/api/v1/push",
@@ -21,6 +24,16 @@ logger.addHandler(handler)
 logger.info('Starting WorldTime Application.')
 app = FastAPI()
 logger.info('Waiting for connections.')
+
+logger.warning('this is warning')
+logger.error('this is error')
+logger.critical('this is critical',
+                extra={"tags": {
+                    "service": "worldtime",
+                    'customer': 'tsystems',
+                    'location': 'kosice',
+                    'training': 'monitoring'
+                    }})
 
 
 @app.get('/')
