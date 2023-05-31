@@ -3,17 +3,13 @@ import logging
 import pendulum
 from fastapi import FastAPI
 
-logging.basicConfig(level=logging.INFO)
+logging.basicConfig(level=logging.INFO,
+                    format="%(asctime)s %(name)s:%(lineno)d %(levelname)-8s: %(message)s")
+logger = logging.getLogger(__name__)
 
-logging.info('Starting WorldTime Application.')
+logger.info('Starting WorldTime Application.')
 app = FastAPI()
-logging.info('Waiting for connections.')
-
-logging.warning('This is warning.')
-logging.error('This is error.')
-logging.critical('This is critical.')
-
-
+logger.info('Waiting for connections.')
 
 
 @app.get('/')
@@ -22,6 +18,7 @@ def hello():
 
 @app.get('/api/timezones')
 def get_timezones():
+    logger.info('get_timezones()')
     return pendulum.timezones
 
 @app.get('/api/timezones/{area}/{location}')
