@@ -1,4 +1,5 @@
 import logging
+from time import sleep
 from functools import wraps
 
 import pendulum
@@ -82,3 +83,16 @@ def get_timezone_info(request: Request, area, location):
             'error': f'Uknown timezone {area}/{location}'
         })
     
+    
+@app.get('/deadlock')
+def deadlock():
+    while True:
+        logger.info('>> work in progress')
+        sleep(1)
+
+
+@app.get('/api/healthz')
+def check_health():
+    return {
+        'status': 'up'
+    }
