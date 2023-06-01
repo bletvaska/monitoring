@@ -35,6 +35,13 @@ services:
     - prometheus:/opt/bitnami/prometheus/data
     - ./configs/prometheus/:/opt/bitnami/prometheus/conf/
 
+  node_exporter:
+    image: quay.io/prometheus/node-exporter:latest
+    command:
+      - '--path.rootfs=/host'
+    volumes:
+      - '/:/host:ro,rslave'
+
 
 volumes:
   loki:
