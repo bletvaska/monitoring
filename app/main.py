@@ -4,6 +4,7 @@ from functools import wraps
 import pendulum
 from pendulum.tz.zoneinfo.exceptions import InvalidTimezone
 from fastapi import FastAPI, Request
+from fastapi.responses import JSONResponse
 import logging_loki
 
 # rename level tag to level
@@ -64,4 +65,8 @@ def get_timezone_info(request: Request, area, location):
     except InvalidTimezone as ex:
         logger.error(f'Unknown timezone {area}/{location}')
         logger.exception(ex)
+        
+        return JSONResponse(status_code=404, content={
+            'error': f'Uknown timezone {area}/{location}'
+        })
     
