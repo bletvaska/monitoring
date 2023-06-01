@@ -8,7 +8,8 @@ scrape_configs:
     - targets: [
         'prometheus:9090',
         'grafana:3000',
-        'loki:3100'
+        'loki:3100',
+        'node_exporter:9100'
       ]
 
   - job_name: worldtime
