@@ -13,4 +13,3 @@ with Diagram('Architecture', show=False):
         
         fastapi >> loki << grafana
         
-        

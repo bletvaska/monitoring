@@ -2,6 +2,7 @@ import logging
 from functools import wraps
 
 import pendulum
+from pendulum.tz.zoneinfo.exceptions import InvalidTimezone
 from fastapi import FastAPI, Request
 import logging_loki
 
@@ -54,9 +55,13 @@ def get_timezones(request: Request):
 @log_client_ip
 @app.get('/api/timezones/{area}/{location}')
 def get_timezone_info(request: Request, area, location):
-    now = pendulum.now(f'{area}/{location}')
-    return {
-        'datetime': now.isoformat(),
-        'unixtime': int(now.timestamp())
-    }
+    try:
+        now = pendulum.now(f'{area}/{location}')
+        return {
+            'datetime': now.isoformat(),
+            'unixtime': int(now.timestamp())
+        }
+    except InvalidTimezone as ex:
+        logger.error(f'Unknown timezone {area}/{location}')
+        logger.exception(ex)
     
