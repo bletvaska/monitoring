@@ -9,7 +9,7 @@ $ sudo apt install python3-pip
 pip install fastapi uvicorn pendulum
 ```
 
-## Running
+### Running
 
 ```bash
 $ uvicorn main:app --reload

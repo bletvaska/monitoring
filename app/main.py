@@ -40,7 +40,16 @@ def log_client_ip(func):
                     }})
         return await func(*args, **kwargs)
     return wrapper
-    
+
+
+@app.middleware('http')
+async def add_process_time_header(request: Request, call_next):
+    start_time = pendulum.now()
+    response = await call_next(request)
+    process_time = pendulum.now() - start_time
+    response.headers['X-Process-Time'] = f'{process_time.microseconds}'
+    return response
+
     
 @app.get('/')
 def hello():
