@@ -6,6 +6,7 @@ from pendulum.tz.zoneinfo.exceptions import InvalidTimezone
 from fastapi import FastAPI, Request
 from fastapi.responses import JSONResponse
 import logging_loki
+from starlette_prometheus import metrics, PrometheusMiddleware
 
 # rename level tag to level
 logging_loki.emitter.LokiEmitter.level_tag = 'level'
@@ -26,6 +27,8 @@ logger.addHandler(handler)
 
 logger.info('Starting WorldTime Application.')
 app = FastAPI()
+app.add_middleware(PrometheusMiddleware)
+app.add_route('/metrics', metrics)
 logger.info('Waiting for connections.')
 
 
