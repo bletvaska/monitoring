@@ -10,3 +10,9 @@ scrape_configs:
         'grafana:3000',
         'loki:3100'
       ]
+
+  - job_name: worldtime
+    static_configs:
+    - targets: [
+        'worldtime:8000'
+    ]
