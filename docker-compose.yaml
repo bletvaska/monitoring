@@ -14,6 +14,14 @@ services:
      "--reload",
      "--log-level=critical"
     ]
+    healthcheck:
+      interval: 10s
+      timeout: 3s
+      retries: 3
+      start_period: 15s
+      test: [
+        "CMD", "http", "--check-status", "get", "http://localhost:8000/api/healthz"
+      ]
 
   loki:
     image: grafana/loki
