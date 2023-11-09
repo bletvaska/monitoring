@@ -1,42 +1,26 @@
 version: "3"
 
 services:
-  fastapi:
-    image: bletvaska/python
-    ports:
-      - 8080:80
+  worldtime:
     volumes:
       - ./app:/app
-    user: "${UID:-1000}:${GID:-1000}"
-    command: uvicorn main:app --host 0.0.0.0 --port 80 --reload
+    ports:
+      - 80:8000
+    image: bletvaska/python
+    command: uvicorn "main:app" --host 0.0.0.0 --reload
 
   loki:
     image: grafana/loki
-    ports:
-      - 3100:3100
+    volumes:
+    - loki:/loki
 
   grafana:
     image: grafana/grafana
     ports:
-      - 3000:3000
+    - 3000:3000
     volumes:
-      - ./grafana:/var/lib/grafana
+    - grafana:/var/lib/grafana
 
-
-  prometheus:
-    image: bitnami/prometheus
-    ports:
-      - 9090:9090
-    volumes:
-      - ./prometheus/data:/opt/bitnami/prometheus/data
-      - ./prometheus/conf/prometheus.yml:/opt/bitnami/prometheus/conf/prometheus.yml
-      #- ./prometheus/conf:/opt/bitnami/prometheus/conf
-
-
-  toolbox:
-    image: bletvaska/toolbox
-    user: "${UID:-1000}:${GID:-1000}"
-    volumes:
-      - ./app:/app
-    working_dir: /app
-
+volumes:
+  loki:
+  grafana:
