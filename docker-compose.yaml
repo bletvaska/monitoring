@@ -8,6 +8,20 @@ services:
       - 80:8000
     image: bletvaska/python
     command: uvicorn "main:app" --host 0.0.0.0 --reload
+    deploy:
+      resources:
+        limits:
+          cpus: "1"
+          memory: 100M
+    healthcheck:
+      test: [
+        # "CMD", "http", "--check-status", "get", "http://localhost:8000/healthz"
+        "CMD", "curl", "-f", "http://localhost:8000/healthz", "||", "exit", "1"
+      ]
+      interval: 10s
+      timeout: 3s
+      retries: 3
+      start_period: 30s
 
   loki:
     image: grafana/loki
@@ -21,6 +35,22 @@ services:
     volumes:
     - grafana:/var/lib/grafana
 
+  prometheus:
+    image: bitnami/prometheus
+    ports:
+    - 9090:9090
+    volumes:
+    - prometheus:/opt/bitnami/prometheus/data
+    - ./configs/prometheus:/opt/bitnami/prometheus/conf/
+
+  node_exporter:
+    image: quay.io/prometheus/node-exporter
+    command:
+    - '--path.rootfs=/host'
+    volumes:
+    - '/:/host:ro,rslave'
+
 volumes:
   loki:
   grafana:
+  prometheus:
