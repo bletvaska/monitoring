@@ -1,0 +1,27 @@
+services:
+
+  worldtime:
+    volumes:
+      - ./app:/app
+    ports:
+      - 8000:8000
+    image: bletvaska/python
+    command: [
+      "uvicorn", "main:app", "--host", "0.0.0.0", "--reload"
+    ]
+
+  loki:
+    image: grafana/loki
+    volumes:
+    - loki:/loki
+
+  grafana:
+    image: grafana/grafana
+    ports:
+    - 3000:3000
+    volumes:
+    - grafana:/var/lib/grafana
+
+volumes:
+  loki:
+  grafana:
