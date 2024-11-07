@@ -1,0 +1,7 @@
+{
+    "status": 401,
+    "title": "Incorrect username or password",
+    "detail": "Authentication failed due to incrrect username or password. Check your credentials.",
+    "type": "/errors/incorrect-user-pass",
+    "instance": "/login/"
+}

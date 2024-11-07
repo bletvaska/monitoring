@@ -1,5 +1,6 @@
 import logging
 from functools import wraps
+import time
 
 from fastapi import FastAPI, Request
 from fastapi.responses import JSONResponse
@@ -84,3 +85,10 @@ async def get_time_from_timezone(request: Request, area, location):
                 "error": f"Unknow timezone '{area}/{location}'"
             }
         )
+
+
+@app.get('/deadlock')
+async def deadlock():
+    while True:
+        logger.info('working on')
+        time.sleep(1)
