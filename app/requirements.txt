@@ -2,3 +2,4 @@ fastapi
 pendulum
 uvicorn
 python-logging-loki
+starlette-prometheus

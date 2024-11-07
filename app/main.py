@@ -7,6 +7,8 @@ import pendulum
 from pendulum.tz.exceptions import InvalidTimezone
 from logging_loki import LokiHandler
 import logging_loki
+from starlette_prometheus import metrics, PrometheusMiddleware
+
 
 # rename level tag to level
 logging_loki.emitter.LokiEmitter.level_tag = 'level'
@@ -28,12 +30,11 @@ logging.basicConfig(
     format='%(asctime)s %(name)-5s %(levelname)-8s: %(message)s'
     )
 
-logger.info('WorldTime app is starting.', extra={"tags": {"hello": "world"}})
+logger.info('WorldTime app is starting.')
 app = FastAPI()
-logger.info('Waiting for connections.')
-logger.warning('warning')
-logger.error('error')
-logger.critical('critical')
+app.add_middleware(PrometheusMiddleware)
+app.add_route('/metrics', metrics)
+
 
 
 def log_client_ip(func):
