@@ -6,6 +6,5 @@ scrape_configs:
   - targets: [
       'grafana:3000',
       'loki:3100',
-      'prometheus:9000'
+      'prometheus:9090'
   ]
-  
