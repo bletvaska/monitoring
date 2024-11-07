@@ -1,5 +1,0 @@
-fastapi
-uvicorn
-python-logging-loki
-starlette-prometheus
-
