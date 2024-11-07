@@ -39,12 +39,12 @@ logger.critical('critical')
 def log_client_ip(func):
     @wraps(func)
     async def wrapper(*args, **kwargs):
-        request = kwargs['request']
+        request: Request = kwargs['request']
         logger.info(f'Connection from {request.client.host}.',
                     extra={'tags': {
                      'client': request.client.host,
                      'action': 'audit',
-                     'path': '/api/timezones'   
+                     'path': request.url.path
                     }})
         return await func(*args, **kwargs)
     return wrapper
