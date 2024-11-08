@@ -98,5 +98,18 @@ async def deadlock():
 @app.get('/healthz')
 def check_health():
     return {
-        'status': 'up'
+        'status': 'up',
+        'disk': {
+            'permission': 'ok',
+            'size': 'ok'
+        }
     }
+
+@app.get('/api/failure')
+def get_failure():
+    return JSONResponse(
+        status_code=500, 
+        content={
+            'error': "we have some error"
+        }
+    )

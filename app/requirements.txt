@@ -3,3 +3,4 @@ pendulum
 uvicorn
 python-logging-loki
 starlette-prometheus
+# httpie

@@ -17,6 +17,14 @@ services:
         reservations:
           cpus: "0.25"
           memory: 50M
+    # healthcheck:
+    #   test: [
+    #     "CMD", "/home/pythonista/.local/bin/http", "--check-status", "get", "http://localhost:8000/healthz"
+    #   ]
+    #   interval: 10s
+    #   timeout: 3s
+    #   retries: 3
+    #   start_period: 10s
 
   loki:
     image: grafana/loki
