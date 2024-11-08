@@ -92,3 +92,11 @@ async def deadlock():
     while True:
         logger.info('working on')
         time.sleep(1)
+
+
+@app.head('/healthz')
+@app.get('/healthz')
+def check_health():
+    return {
+        'status': 'up'
+    }
