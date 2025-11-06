@@ -48,7 +48,7 @@ async def add_process_time_header(request: Request, call_next):
 
 
 @app.get('/api/timezones')
-def list_of_timezones(request: Request, user):
+def list_of_timezones(request: Request):
     logger.debug('Request for timezones.')
     logger.info('New request', extra={
         "tags": {
