@@ -12,5 +12,5 @@ scrape_configs:
 - job_name: wordltime
   static_configs:
   - targets: [
-    'worldtime:80'
+    'worldtime:8000'
   ]

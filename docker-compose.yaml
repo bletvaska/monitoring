@@ -9,7 +9,7 @@ services:
     command: [
       "uvicorn", "main:app", 
       "--reload", 
-      "--host=0.0.0.0", 
+      "--host=0.0.0.0",
       "--port=8000"
       # "--log-level=critical"
     ]
@@ -33,6 +33,13 @@ services:
     volumes:
     - ./configs/prometheus:/etc/prometheus
     - prometheus:/prometheus
+
+  node_exporter:
+    image: quay.io/prometheus/node-exporter:latest
+    command: 
+    - --path.rootfs=/host
+    volumes:
+    - /:/host:ro,rslave
 
 volumes:
   loki:
