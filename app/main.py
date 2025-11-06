@@ -1,7 +1,9 @@
 import logging
 
 from fastapi import FastAPI, Request
+from fastapi.responses import JSONResponse
 import pendulum
+from pendulum.tz.exceptions import InvalidTimezone
 import logging_loki
 
 logging.basicConfig(
@@ -42,14 +44,20 @@ def list_of_timezones(request: Request):
 @app.get('/api/timezone/{area}/{location}')
 def get_timezone_info(request: Request, area: str, location: str):
     logger.debug(f'Request for timezone {area}/{location}.')
-    logger.info('New request', extra={
-        "tags": {
-            "client": request.client.host,
-            "port": request.client.port,
-            "path": request.url.path
-        }
-    })
-    now = pendulum.now(f'{area}/{location}')
-    return now.isoformat()
+
+    try:
+        now = pendulum.now(f'{area}/{location}')
+        return now.isoformat()
+    except InvalidTimezone as ex:
+        logger.info(f"Unknown timezone '{area}/{location}'")
+        logger.exception(ex)
+
+        return JSONResponse(
+            status_code=404,
+            content={
+                "error": f"Unknown timezone '{area}/{location}'"
+            }
+        )
+
 
 logger.info('Waiting for connections.')
