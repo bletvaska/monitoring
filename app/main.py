@@ -5,6 +5,8 @@ from fastapi.responses import JSONResponse
 import pendulum
 from pendulum.tz.exceptions import InvalidTimezone
 import logging_loki
+from starlette_prometheus import metrics, PrometheusMiddleware
+
 
 logging.basicConfig(
     level=logging.DEBUG,
@@ -27,6 +29,8 @@ logger.addHandler(handler)
 
 logger.info('Starting WorldTime application.')
 app = FastAPI()
+app.add_middleware(PrometheusMiddleware)
+app.add_route('/metrics', metrics)
 
 
 @app.middleware('http')
