@@ -26,6 +26,15 @@ services:
     volumes:
     - grafana:/var/lib/grafana
 
+  prometheus:
+    image: prom/prometheus
+    ports:
+    - 9090:9090 
+    volumes:
+    - ./configs/prometheus:/etc/prometheus
+    - prometheus:/prometheus
+
 volumes:
   loki:
   grafana:
+  prometheus:

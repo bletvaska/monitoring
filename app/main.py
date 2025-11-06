@@ -29,8 +29,22 @@ logger.info('Starting WorldTime application.')
 app = FastAPI()
 
 
+@app.middleware('http')
+async def add_process_time_header(request: Request, call_next):
+    # process request
+    start_time = pendulum.now()
+    response = await call_next(request)
+
+    # process response
+    process_time = pendulum.now() - start_time
+    response.headers['X-Process-Time'] = f'{process_time.microseconds}'
+
+    # pass to next middleware function (return the response to the user)
+    return response
+
+
 @app.get('/api/timezones')
-def list_of_timezones(request: Request):
+def list_of_timezones(request: Request, user):
     logger.debug('Request for timezones.')
     logger.info('New request', extra={
         "tags": {
@@ -41,13 +55,23 @@ def list_of_timezones(request: Request):
     })
     return pendulum.timezones()
 
+
 @app.get('/api/timezone/{area}/{location}')
 def get_timezone_info(request: Request, area: str, location: str):
-    logger.debug(f'Request for timezone {area}/{location}.')
+    logger.info(f'Request for timezone {area}/{location}.')
 
     try:
+        # retrieve the timezone info abou given area and location
+        user = {
+            'who': request.client.host,
+            'what': request.url.path,
+            'with': f'{area}/{location}'
+        }
+        logger.info(user)
+
         now = pendulum.now(f'{area}/{location}')
         return now.isoformat()
+
     except InvalidTimezone as ex:
         logger.info(f"Unknown timezone '{area}/{location}'")
         logger.exception(ex)
