@@ -8,4 +8,9 @@ scrape_configs:
       'loki:3100',
       'prometheus:9090'
   ]
-  
+
+- job_name: wordltime
+  static_configs:
+  - targets: [
+    'worldtime:80'
+  ]
