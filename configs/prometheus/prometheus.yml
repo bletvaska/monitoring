@@ -6,7 +6,8 @@ scrape_configs:
   - targets: [
       'grafana:3000',
       'loki:3100',
-      'prometheus:9090'
+      'prometheus:9090',
+      'node_exporter:9100'
   ]
 
 - job_name: wordltime
