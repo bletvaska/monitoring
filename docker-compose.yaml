@@ -13,6 +13,15 @@ services:
       "--port=8000"
       # "--log-level=critical"
     ]
+    healthcheck:
+      test: [
+        "CMD", "http", "--check-status", "GET", "http://localhost:8000/api/healthz"
+      ]
+      interval: 10s
+      timeout: 3s
+      retries: 3
+      start_period: 15s
+
 
   loki:
     image: grafana/loki

@@ -47,6 +47,14 @@ async def add_process_time_header(request: Request, call_next):
     return response
 
 
+@app.get('/api/healthz')
+@app.head('/api/healthz')
+def health_check():
+    return {
+        "status": "up"
+    }
+
+
 @app.get('/api/timezones')
 def list_of_timezones(request: Request):
     logger.debug('Request for timezones.')
